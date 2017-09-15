@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TrueFalseQuiz</string>
+    <string name="false_text">False</string>
+    <string name="text_true">True</string>
+    <string name="next"><![CDATA[> > >]]></string>
+    <string name="shay_question">Shay is a cool dude.</string>
+    <string name="kyle_question">Kyle is a baller</string>
+</resources>
