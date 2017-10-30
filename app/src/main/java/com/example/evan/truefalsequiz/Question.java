@@ -27,6 +27,6 @@ public class Question {
      * @return true if answers match, false otherwise
      */
     public boolean checkAnswer(boolean userAnswer) {
-        return answer == userAnswer;
+            return answer == userAnswer;
     }
 }

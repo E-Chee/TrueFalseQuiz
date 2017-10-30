@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">真假測驗</string>
+    <string name="evan_question">Evan 是最好的</string>
+    <string name="false_text">假</string>
+    <string name="kyle_question">Kyle 是籃球運動員</string>
+    <string name="next">下一個</string>
+    <string name="shay_question">Shay 很酷</string>
+    <string name="text_true">真實</string>
+    <string name="dog_question">狗是好的</string>
+    <string name="jake_paul_question">這是每天哥</string>
+    <string name="ricegum_question">這是每個晚上姐</string>
+</resources>

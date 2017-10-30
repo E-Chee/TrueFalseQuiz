@@ -5,4 +5,10 @@
     <string name="next"><![CDATA[> > >]]></string>
     <string name="shay_question">Shay is a cool dude.</string>
     <string name="kyle_question">Kyle is a baller</string>
+    <string name="evan_question">Evan is da best</string>
+    <string name="dog_question">Dogs are tasty</string>
+    <string name="jake_paul_question">It\'s everyday bro</string>
+    <string name="ricegum_question">It\'s everynight sis</string>
+    <string name="legend_question">Gragod is a legend</string>
+    <string name="hero_question">Gragod is a hero</string>
 </resources>
