@@ -7,7 +7,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +21,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button trueButton, falseButton, nextButton, finishButton;
-    private TextView questionText;
+    private Button trueButton, falseButton, nextButton, finishButton, displayTaskInfo;
+    private TextView questionText, newTask;
+    private ImageView upArrow;
     private List<Question> questionBank;
+    private List<Tasks> tasks;
+    private List<CheckBoxy> checkBoxInfo;
+    private ListView taskList;
     private int questionNumber, score;
     private float x1, x2, y1, y2;
+    private ArrayAdapter<Tasks> adapter;
+    private CheckBox check1, check2;
+    public static final String EXTRA_NAME = "CLOUT";
+
 
     public static final String TAG = "MainActivity";
 
@@ -41,7 +54,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         questionText.setText(questionBank.get(questionNumber).getQuestionText());
         score = 0;
+        //set textviews
+        initTaskList();
+        initCheckBoxList();
+        //create the adapter that will be the go between from the list to the listview
+        adapter = new ArrayAdapter<Tasks>(this, R.layout.item, tasks);
+        //set the adapter to the listview
+        taskList.setAdapter(adapter);
+        taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            //when clicked, each item will open main activity and show name, description, and pic
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Intent i = new Intent(MainActivity.this, TaskActivity.class); //send info to new activity
+                //get the object from the arraylist and put it in the extra for Intent
+                i.putExtra(EXTRA_NAME, tasks.get(pos));
+                startActivity(i);
+            }
+        });
     }
+
 
 
     public boolean onTouchEvent(MotionEvent touchevent) {
@@ -55,23 +86,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case MotionEvent.ACTION_UP: {
                 x2 = touchevent.getX();
                 y2 = touchevent.getY();
-            //if left to right sweep event on screen
-                if (x1 < x2) {
-                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
-                }
-            // if right to left sweep event on screen
-                if (x1 > x2) {
-                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(MainActivity.this, TargetActivity.class);
-                    startActivity(i);
-                }
-                // if UP to Down sweep event on screen
-                if (y1 < y2) {
-                //Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_LONG).show();
-                }
+//                //if left to right sweep event on screen
+//                if (x1 < x2) {
+//                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
+//                }
+//                // if right to left sweep event on screen
+//                if (x1 > x2) {
+//                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
+//                }
+//                // if UP to Down sweep event on screen
+//                if (y1 < y2) {
+//                Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_LONG).show();
+//                }
                 //if Down to UP sweep event on screen
                 if (y1 > y2) {
-                // Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(MainActivity.this, TargetActivity.class);
+                startActivity(i);
                 }
                 break;
             }
@@ -79,6 +110,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.check_1:
+                if (checked)
+                    checkBoxInfo.add(new CheckBoxy(true));
+                else
+                    checkBoxInfo.add(new CheckBoxy(false));
+                break;
+            case R.id.check_2:
+                if (checked)
+                    checkBoxInfo.add(new CheckBoxy(true));
+                else
+                    checkBoxInfo.add(new CheckBoxy(false));
+                break;
+        }
+    }
 
     private void initQuestionBank() {
         questionBank = new ArrayList<>();
@@ -92,6 +142,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         questionBank.add(new Question(getString(R.string.legend_question), true));
     }
 
+    private void initTaskList() {
+        tasks = new ArrayList<>();
+        tasks.add(new Tasks("Do hw", "do hw by five", "Nov 8", "busy"));
+        tasks.add(new Tasks("Do dishes", "do dishes by six", "Nov 20", "available"));
+        tasks.add(new Tasks("hehehe", "midnight", "Nov 9", "available"));
+    }
+
+    private void initCheckBoxList() {
+        checkBoxInfo = new ArrayList<>();
+    }
+
 
     private void wireWidget() {
         trueButton = (Button) findViewById(R.id.button_true);
@@ -99,6 +160,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nextButton = (Button) findViewById(R.id.button_next);
         questionText = (TextView) findViewById(R.id.text_question);
         finishButton = (Button) findViewById(R.id.button_finish);
+        newTask = (TextView) findViewById(R.id.new_task);
+        upArrow = (ImageView) findViewById(R.id.up_arrow);
+        taskList = (ListView) findViewById(R.id.task_list);
+        displayTaskInfo = (Button) findViewById(R.id.task_info);
+        check1 = (CheckBox) findViewById(R.id.check_1);
+        check2 = (CheckBox) findViewById(R.id.check_2);
     }
 
     private void setListeners() {
@@ -106,6 +173,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         falseButton.setOnClickListener(this);
         nextButton.setOnClickListener(this);
         finishButton.setOnClickListener(this);
+        displayTaskInfo.setOnClickListener(this);
+        check1.setOnClickListener(this);
+        check2.setOnClickListener(this);
     }
 
 
@@ -132,6 +202,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_finish:
                 finishTest();
+                break;
+            case R.id.task_info:
+                startActivity(new Intent(MainActivity.this, TaskActivity.class).putExtra(EXTRA_NAME, tasks.get(0)));
                 break;
         }
     }
