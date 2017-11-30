@@ -2,10 +2,13 @@ package com.example.evan.truefalsequiz;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView upArrow;
     private List<Question> questionBank;
     private List<Tasks> tasks;
-    private List<CheckBoxy> checkBoxInfo;
+    private List<CheckBox> checkBoxes;
     private ListView taskList;
     private int questionNumber, score;
     private float x1, x2, y1, y2;
@@ -58,7 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initTaskList();
         initCheckBoxList();
         //create the adapter that will be the go between from the list to the listview
-        adapter = new ArrayAdapter<Tasks>(this, R.layout.item, tasks);
+        adapter = new ArrayAdapter<Tasks>(this, R.layout.item, tasks){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                return super.getView(position, convertView, parent);
+            }
+        };
         //set the adapter to the listview
         taskList.setAdapter(adapter);
         taskList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -72,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
-
-
 
     public boolean onTouchEvent(MotionEvent touchevent) {
         switch (touchevent.getAction()) {
@@ -117,15 +124,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(view.getId()) {
             case R.id.check_1:
                 if (checked)
-                    checkBoxInfo.add(new CheckBoxy(true));
-                else
-                    checkBoxInfo.add(new CheckBoxy(false));
+                    tasks.remove(0);
                 break;
             case R.id.check_2:
                 if (checked)
-                    checkBoxInfo.add(new CheckBoxy(true));
-                else
-                    checkBoxInfo.add(new CheckBoxy(false));
+                    tasks.remove(1);
                 break;
         }
     }
@@ -150,7 +153,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initCheckBoxList() {
-        checkBoxInfo = new ArrayList<>();
+        checkBoxes= new ArrayList<>();
+        checkBoxes.add((CheckBox)findViewById(R.id.check_1));
+        checkBoxes.add((CheckBox)findViewById(R.id.check_2));
     }
 
 
