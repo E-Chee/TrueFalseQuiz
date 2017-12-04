@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,8 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button trueButton, falseButton, nextButton, finishButton, displayTaskInfo;
     private TextView questionText, newTask;
     private ImageView upArrow;
+    private int streak;
     private List<Question> questionBank;
-    private List<Tasks> tasks;
+    private List<Tasks> tasks, history;
     private List<CheckBox> checkBoxes;
     private ListView taskList;
     private int questionNumber, score;
@@ -36,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayAdapter<Tasks> adapter;
     private CheckBox check1, check2;
     public static final String EXTRA_NAME = "CLOUT";
-
-
     public static final String TAG = "MainActivity";
 
     @Override
@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wireWidget();
         initQuestionBank();
         setListeners();
+        new Date().g
+        streak = 0;
         //load the 1st question
         //check if we're resuming from a previous state
         if (savedInstanceState != null) {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //set textviews
         initTaskList();
         initCheckBoxList();
+        initHistoryList();
         //create the adapter that will be the go between from the list to the listview
         adapter = new ArrayAdapter<Tasks>(this, R.layout.item, tasks){
             @NonNull
@@ -124,11 +127,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(view.getId()) {
             case R.id.check_1:
                 if (checked)
-                    tasks.remove(0);
+                    history.add(tasks.remove(0));
                 break;
             case R.id.check_2:
                 if (checked)
-                    tasks.remove(1);
+                    history.add(tasks.remove(1));
                 break;
         }
     }
@@ -153,11 +156,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initCheckBoxList() {
-        checkBoxes= new ArrayList<>();
+        checkBoxes = new ArrayList<>();
         checkBoxes.add((CheckBox)findViewById(R.id.check_1));
         checkBoxes.add((CheckBox)findViewById(R.id.check_2));
     }
 
+    private void initHistoryList() {
+        history = new ArrayList<>();
+    }
 
     private void wireWidget() {
         trueButton = (Button) findViewById(R.id.button_true);
